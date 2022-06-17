@@ -1,0 +1,76 @@
+{% extends 'core/base.html'%}
+{% load static %}
+
+{% block content %}
+<!--Slider-->
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+    <section class="slider">
+        <ul class="slides">
+            <li>
+                <!--<img src="{% static 'assets/img/weather.png' %}">-->
+                <img src="{% static 'assets/img/w3.jpg' %}">
+                <div class="caption center-align">
+                    <h3 class="slider-title">See the weather forecast for your region!</h3>
+                </div>
+            </li>
+            <li>
+                <!--<img src="{% static 'assets/img/world-map-wallpaper-8.jpg' %}"> -->
+                <img src="{% static 'assets/img/m1.jpg' %}"> 
+                <div class="caption center-align">
+                    <h3 class="slider-title">Weather forecast for any region in the world!</h3>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <!-- Search bar -->
+    <section id="search" class="section section-search center bg-section">
+        <div class="container">
+            <div class="row">
+                <div class="col s10 m12 l12">
+                    <h3 class="search-title white-text">Enter the name of your city!</h3>
+                    <form class="col m12" method="POST" action="">
+                        {% csrf_token %}
+                        <div class="input-field" >
+                            {{form.name}}
+                            <label class="label-icon" for="search"><i class="material-icons search-icon">Search</i></label>
+                        </div>
+                        <button class="btn waves-effect waves-light button-add" type="submit" name="action">Add City
+                            <!--<i class="material-icons right">add</i>-->
+                        </button>
+                    </form>
+                </div>
+            </div>          
+        </div>
+    </section>  
+
+    <!-- weather results -->  
+    <section class="section center">
+        <h4 class="result-title">Added Cities</h4>
+        {% include 'core/_messages.html' %}
+        <div class="container">
+            <div class="row">
+                {% for city in weather_data %}
+                <div class="col s12 m12 l4">
+                    <div class="card horizontal">
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <a href="{% url 'delete' city.id %}"><i class="material-icons left">close</i></a>
+                            <img class="activator" src="http://openweathermap.org/img/w/{{city.icon}}.png">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title activator grey-text text-darken-4" style="text-transform: capitalize" >{{city.city}} {{city.temperature}}°C<i class="material-icons right">more_vert</i></span>
+                        </div>
+                        <div class="card-reveal">
+                            <span class="card-title card-description center grey-text text-darken-4">{{city.description}}<i class="material-icons right">close</i></span>
+                            <p class="reveal-card-text">Minimum Temperature: {{city.min_temperature}} °C</p>
+                            <p class="reveal-card-text">Wind Velocity: {{city.wind}} meter/s</p>
+                            <p class="reveal-card-text">Atmospheric Pressure: {{city.pressure}} hPA</p>
+                            <p class="reveal-card-text">Humidity: {{city.humidity}}%</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</html>
+{% endblock %}
